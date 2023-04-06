@@ -1,22 +1,28 @@
--- 1 Задание
+## Задание 1
 
--- Создание 
-CREATE TABLE User (
-    id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+### Создание
+```SQL
+USE my_users;
+
+CREATE TABLE Users_1 (
     first_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
     last_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
     middle_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
-    birthday DATE
+    birthday DATE,
+    id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
 )
-
--- Заполнение
 ```
+
+### Заполнение
+```Python
 import random
+import time
 from datetime import datetime, timedelta
 
 import pyodbc
 from russian_names import RussianNames
 
+st = time.time()
 start_date = datetime(1995, 1, 1)
 end_date = datetime(2005, 12, 31)
 delta = end_date - start_date
@@ -27,25 +33,52 @@ database = 'my_users'
 username = 'sa'
 password = 'admin'
 conn = pyodbc.connect(
-    'DRIVER={ODBC Driver 18 for SQL Server};SERVER=' + 
-    server + ';DATABASE=' + database + ';UID=' + 
-    username + ';PWD=' + password + ';Encrypt=no;'
+    f"""
+    DRIVER=ODBC Driver 18 for SQL Server;
+    SERVER={server};
+    DATABASE={database};
+    UID={username};
+    PWD={password};
+    Encrypt=no;
+    """
 )
 cursor = conn.cursor()
 
-rn = RussianNames(count=1, patronymic=True, transliterate=False, encoding='UTF-8')
+rn = RussianNames(count=1000000, patronymic=True, transliterate=False, encoding='UTF-8')
+data_to_insert = []
 for person in rn:
-    first_name, last_name, second_name = person.split()
-    first_name = first_name
+    first_name, last_name, middle_name = person.split()
     last_name = last_name
-    second_name = second_name
+    first_name = first_name
+    middle_name = middle_name
     random_date = start_date + timedelta(days=random.randint(0, delta.days))
     random_date = random_date.date()
-    cursor.execute(
-        """
-        INSERT INTO dbo.Users (first_name, middle_name, last_name, birthday)
-        VALUES (?, ?, ?, ?)""",
-        first_name, last_name, second_name, random_date
-    )
-    conn.commit()
+    data_to_insert.append((last_name, first_name, middle_name, random_date))
+
+cursor.executemany(
+    """
+    INSERT INTO dbo.Users_1 (last_name, first_name, middle_name, birthday)
+    VALUES (?, ?, ?, ?)""",
+    data_to_insert
+)
+conn.commit()
+
+elapsed_time = time.time() - st
+print('Execution time:', time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
+```
+
+### Копия таблицы
+```SQL
+USE my_users;
+
+CREATE TABLE Users_2 (
+    first_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
+    last_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
+    middle_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
+    birthday DATE,
+    id int NOT NULL PRIMARY KEY,
+)
+
+INSERT INTO Users_2
+SELECT * FROM Users_1
 ```
