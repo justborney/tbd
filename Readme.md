@@ -82,3 +82,30 @@ CREATE TABLE Users_2 (
 INSERT INTO Users_2
 SELECT * FROM Users_1
 ```
+
+## Задание 2
+
+### Пункт а) Update
+```SQL
+USE my_users;
+
+ALTER TABLE Users_2 ADD full_age INT;
+
+UPDATE Users_2
+SET Users_2.full_age = DATEDIFF(day, Users_2.birthday, GETDATE() - (DATEDIFF(year, Users_2.birthday, GETDATE()) / 4)) / 365;
+```
+### Пункт б) Trigger
+```SQL
+USE my_users;
+GO
+
+CREATE TRIGGER set_full_age
+    ON Users_2
+    AFTER INSERT AS
+BEGIN
+    UPDATE Users_2
+    SET full_age = DATEDIFF(day, Users_2.birthday, GETDATE() - (DATEDIFF(year, Users_2.birthday, GETDATE()) / 4)) / 365
+    WHERE full_age IS NULL;
+END
+GO
+```
