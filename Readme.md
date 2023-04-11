@@ -5,10 +5,10 @@
 USE my_users;
 GO
 
-CREATE TABLE Users_1 (
-    first_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
-    last_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
-    middle_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
+CREATE TABLE Users_01 (
+    first_name NVARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
+    last_name NVARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
+    middle_name NVARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
     birthday DATE,
     id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
 )
@@ -42,7 +42,7 @@ def get_users():
 
     cursor.executemany(
         """
-        INSERT INTO dbo.Users_1 (last_name, first_name, middle_name, birthday)
+        INSERT INTO dbo.Users_01 (last_name, first_name, middle_name, birthday)
         VALUES (?, ?, ?, ?)""",
         data_to_insert,
     )
@@ -84,19 +84,23 @@ if __name__ == '__main__':
 USE my_users;
 GO
 
-CREATE TABLE Users_2 (
+SET STATISTICS TIME ON
+
+CREATE TABLE Users_02 (
     first_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
     last_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
     middle_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
     birthday DATE,
     id int NOT NULL PRIMARY KEY,
 )
-GO
 
-INSERT INTO Users_2
-SELECT * FROM Users_1
+INSERT INTO Users_02
+SELECT first_name, last_name, middle_name, birthday, id FROM Users_01
+
+SET STATISTICS TIME OFF
 GO
 ```
+![Table copy](/img/1.2_copy_table.png)
 
 ## Задание 2
 
@@ -105,11 +109,11 @@ GO
 USE my_users;
 GO
 
-ALTER TABLE Users_2 ADD full_age INT;
+ALTER TABLE Users_02 ADD full_age INT;
 GO
 
-UPDATE Users_2
-SET Users_2.full_age = DATEDIFF(day, Users_2.birthday, GETDATE() - (DATEDIFF(year, Users_2.birthday, GETDATE()) / 4)) / 365;
+UPDATE Users_02
+SET Users_02.full_age = DATEDIFF(day, Users_02.birthday, GETDATE() - (DATEDIFF(year, Users_02.birthday, GETDATE()) / 4)) / 365;
 GO
 ```
 
@@ -121,11 +125,11 @@ GO
 SET STATISTICS TIME ON
 
 CREATE TRIGGER set_full_age
-    ON Users_2
+    ON Users_03
     AFTER INSERT AS
 BEGIN
-    UPDATE Users_2
-    SET full_age = DATEDIFF(day, Users_2.birthday, GETDATE() - (DATEDIFF(year, Users_2.birthday, GETDATE()) / 4)) / 365
+    UPDATE Users_03
+    SET full_age = DATEDIFF(day, Users_03.birthday, GETDATE() - (DATEDIFF(year, Users_03.birthday, GETDATE()) / 4)) / 365
     WHERE full_age IS NULL;
 END
 GO
@@ -141,12 +145,12 @@ GO
 
 SET STATISTICS TIME ON
 
-ALTER TABLE Users_3 ADD full_age INT;
+ALTER TABLE Users_04 ADD full_age INT;
 GO
 
 CREATE PROCEDURE SET_AGE AS
-    UPDATE Users_3
-    SET full_age = DATEDIFF(day, Users_3.birthday, GETDATE() - (DATEDIFF(year, Users_3.birthday, GETDATE()) / 4)) / 365;
+    UPDATE Users_04
+    SET full_age = DATEDIFF(day, Users_04.birthday, GETDATE() - (DATEDIFF(year, Users_04.birthday, GETDATE()) / 4)) / 365;
 GO
 
 EXEC SET_AGE
