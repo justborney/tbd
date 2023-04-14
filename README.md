@@ -17,17 +17,17 @@ GO
 
 ### Заполнение
 ```Python
+import csv
 import random
 import time
 from datetime import datetime, timedelta
 
-import pyodbc
 from russian_names import RussianNames
 
 
 def get_users():
     rn = RussianNames(
-        count=100000, patronymic=True, transliterate=False, encoding="UTF-8"
+        count=1000000, patronymic=True, transliterate=False, encoding="UTF-8"
     )
     data_to_insert = []
 
@@ -40,13 +40,7 @@ def get_users():
         random_date = random_date.date()
         data_to_insert.append((last_name, first_name, middle_name, random_date))
 
-    cursor.executemany(
-        """
-        INSERT INTO dbo.Users_01 (last_name, first_name, middle_name, birthday)
-        VALUES (?, ?, ?, ?)""",
-        data_to_insert,
-    )
-    conn.commit()
+    return data_to_insert
 
 
 if __name__ == '__main__':
@@ -55,29 +49,19 @@ if __name__ == '__main__':
     end_date = datetime(2005, 12, 31)
     delta = end_date - start_date
 
-    # Connection
-    server = "10.10.29.125,1433"
-    database = "my_users"
-    username = "sa"
-    password = "admin"
-    conn = pyodbc.connect(
-        f"""
-        DRIVER=ODBC Driver 18 for SQL Server;
-        SERVER={server};
-        DATABASE={database};
-        UID={username};
-        PWD={password};
-        Encrypt=no;
-        """
-    )
-    cursor = conn.cursor()
+    data = []
+    data.extend(get_users())
 
-    for i in range(10):
-        get_users()
+    with open('users2.csv', 'w', newline='', encoding='utf-8') as csvfile:
+        fieldnames = ['last_name', 'first_name', 'middle_name', 'random_date']
+        writer = csv.writer(csvfile)
+        writer.writerow(fieldnames)
+        writer.writerows(data)
 
     elapsed_time = time.time() - st
     print("Execution time:", time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
 ```
+
 ![Table data](/img/1.3_data.png)
 
 ### Копия таблицы
