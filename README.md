@@ -154,9 +154,10 @@ GO
 ![Procedure full age](/img/2.3_procedure_time.png)
 
 ### Сводные данные
-|Update|3.442 s|
-|Trigger|3.797 s|
-|Procedure|3.880 s|
+| Update    | Trigger | Procedure |
+|---|---|---|
+| 3.442 s   | 3.797 s | 3.880 s   |
+
 
 ## Задание 3
 
