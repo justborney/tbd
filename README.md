@@ -106,9 +106,9 @@ GO
 ### Пункт б) Trigger
 ```SQL
 USE my_users;
-GO
 
-SET STATISTICS TIME ON
+ALTER TABLE Users_03 ADD full_age INT;
+GO
 
 CREATE TRIGGER set_full_age
     ON Users_03
@@ -120,6 +120,11 @@ BEGIN
 END
 GO
 
+SET STATISTICS TIME ON
+
+INSERT INTO Users_03 (last_name, first_name, middle_name, birthday, id)
+VALUES (N'Фамилия', N'Имя', N'Отчество', N'2000-01-01', 1000001);
+
 SET STATISTICS TIME OFF
 GO
 ```
@@ -130,8 +135,6 @@ GO
 USE my_users
 GO
 
-SET STATISTICS TIME ON
-
 ALTER TABLE Users_04 ADD full_age INT;
 GO
 
@@ -140,6 +143,8 @@ CREATE PROCEDURE SET_AGE AS
     SET full_age = DATEDIFF(day, Users_04.birthday, GETDATE() - (DATEDIFF(year, Users_04.birthday, GETDATE()) / 4)) / 365;
 GO
 
+SET STATISTICS TIME ON
+
 EXEC SET_AGE
 GO
 
@@ -147,3 +152,7 @@ SET STATISTICS TIME OFF
 GO
 ```
 ![Procedure full age](/img/2.3_procedure_time.png)
+
+## Задание 3
+
+### Пункт а) Update
