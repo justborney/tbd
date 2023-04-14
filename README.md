@@ -70,9 +70,9 @@ USE my_users;
 GO
 
 CREATE TABLE Users_02 (
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    middle_name VARCHAR(50),
+    first_name NVARCHAR(50),
+    last_name NVARCHAR(50),
+    middle_name NVARCHAR(50),
     birthday DATE,
     id int NOT NULL PRIMARY KEY,
 )
