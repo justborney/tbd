@@ -101,6 +101,7 @@ UPDATE Users_02
 SET Users_02.full_age = DATEDIFF(day, Users_02.birthday, GETDATE() - (DATEDIFF(year, Users_02.birthday, GETDATE()) / 4)) / 365;
 GO
 ```
+![Update full age](/img/2.1_update_time.png)
 
 ### Пункт б) Trigger
 ```SQL
@@ -122,6 +123,7 @@ GO
 SET STATISTICS TIME OFF
 GO
 ```
+![Trigger full age](/img/2.2_trigger_time.png)
 
 ### Пункт в) Procedure
 ```SQL
@@ -144,3 +146,4 @@ GO
 SET STATISTICS TIME OFF
 GO
 ```
+![Procedure full age](/img/2.3_procedure_time.png)
