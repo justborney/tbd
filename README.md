@@ -6,9 +6,9 @@ USE my_users;
 GO
 
 CREATE TABLE Users_01 (
-    first_name NVARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
-    last_name NVARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
-    middle_name NVARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
+    first_name NVARCHAR(50),
+    last_name NVARCHAR(50),
+    middle_name NVARCHAR(50),
     birthday DATE,
     id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
 )
@@ -85,15 +85,15 @@ if __name__ == '__main__':
 USE my_users;
 GO
 
-SET STATISTICS TIME ON
-
 CREATE TABLE Users_02 (
-    first_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
-    last_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
-    middle_name VARCHAR(50) COLLATE Latin1_General_100_CI_AI_SC_UTF8,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    middle_name VARCHAR(50),
     birthday DATE,
     id int NOT NULL PRIMARY KEY,
 )
+
+SET STATISTICS TIME ON
 
 INSERT INTO Users_02
 SELECT first_name, last_name, middle_name, birthday, id FROM Users_01
