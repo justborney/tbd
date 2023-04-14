@@ -89,7 +89,7 @@ GO
 
 ## Задание 2
 
-### Пункт а) Update
+### а) Update
 ```SQL
 USE my_users;
 GO
@@ -103,7 +103,7 @@ GO
 ```
 ![Update full age](/img/2.1_update_time.png)
 
-### Пункт б) Trigger
+### б) Trigger
 ```SQL
 USE my_users;
 
@@ -130,7 +130,7 @@ GO
 ```
 ![Trigger full age](/img/2.2_trigger_time.png)
 
-### Пункт в) Procedure
+### в) Procedure
 ```SQL
 USE my_users
 GO
@@ -152,6 +152,11 @@ SET STATISTICS TIME OFF
 GO
 ```
 ![Procedure full age](/img/2.3_procedure_time.png)
+
+### Сводные данные
+|Update|3.442 s|
+|Trigger|3.797 s|
+|Procedure|3.880 s|
 
 ## Задание 3
 
