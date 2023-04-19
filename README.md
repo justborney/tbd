@@ -6,8 +6,8 @@ USE my_users;
 GO
 
 CREATE TABLE Users_01 (
-    first_name NVARCHAR(50),
     last_name NVARCHAR(50),
+    first_name NVARCHAR(50),
     middle_name NVARCHAR(50),
     birthday DATE,
     id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
@@ -70,8 +70,8 @@ USE my_users;
 GO
 
 CREATE TABLE Users_02 (
-    first_name NVARCHAR(50),
     last_name NVARCHAR(50),
+    first_name NVARCHAR(50),
     middle_name NVARCHAR(50),
     birthday DATE,
     id int NOT NULL PRIMARY KEY,
@@ -80,7 +80,7 @@ CREATE TABLE Users_02 (
 SET STATISTICS TIME ON
 
 INSERT INTO Users_02
-SELECT first_name, last_name, middle_name, birthday, id FROM Users_01
+SELECT last_name, first_name, middle_name, birthday, id FROM Users_01
 
 SET STATISTICS TIME OFF
 GO
@@ -156,9 +156,16 @@ GO
 ### Сводные данные
 | Update    | Trigger | Procedure |
 |---|---|---|
-| 3.442 s   | 3.797 s | 3.880 s   |
+| 3.442 s   | 4.298 s | 3.364 s   |
 
 
 ## Задание 3
+В созданную базу добавить поле "количество однофамильцев" и заполнить правильными значениями:
+    a) через Update без создания индексов
+    б) через Update с предварительным созданием индекса по полю с фамилией
+    в) используя хранимую функцию подсчета количества однофамильцев
+    В каждом из случаев применяем код к исходной базе(отдельной копии) и замеряем время исполнения.
+    В пункте б) время считаем отдельно на создание индекса и на выполнение Update, потом суммируем
+
 
 ### Пункт а) Update
