@@ -72,8 +72,8 @@ GO
 CREATE TABLE Users_02 (
     last_name NVARCHAR(50),
     first_name NVARCHAR(50),
-    middle_name NVARCHAR(50),
-    birthday DATE,
+    middle_name NVARCHAR(50)
+,    birthday DATE,
     id int NOT NULL PRIMARY KEY,
 )
 
@@ -168,4 +168,72 @@ GO
     В пункте б) время считаем отдельно на создание индекса и на выполнение Update, потом суммируем
 
 
-### Пункт а) Update
+### а) Update без создания индексов
+
+```SQL
+USE my_users
+GO
+
+ALTER TABLE Users_02 ADD namesake_count INT;
+GO
+
+SET STATISTICS TIME ON
+
+UPDATE Users_02
+SET namesake_count = namesake_count_temp.namesake_count
+FROM (SELECT last_name, count(last_name) namesake_count from Users_02 GROUP BY last_name) namesake_count_temp
+WHERE Users_02.last_name = namesake_count_temp.last_name
+
+SET STATISTICS TIME OFF
+```
+![Update without index](/img/3.1_update_without_index_time.png)
+
+### б) через Update с предварительным созданием индекса по полю с фамилией
+
+```SQL
+USE my_users
+GO
+
+ALTER TABLE Users_03 ADD namesake_count INT;
+GO
+
+SET STATISTICS TIME ON
+CREATE INDEX last_name_index ON Users_03(last_name);
+SET STATISTICS TIME OFF
+
+SET STATISTICS TIME ON
+
+UPDATE Users_03
+SET namesake_count = namesake_count_temp.namesake_count
+FROM (SELECT last_name, count(last_name) namesake_count from Users_03 GROUP BY last_name) namesake_count_temp
+WHERE Users_03.last_name = namesake_count_temp.last_name
+
+SET STATISTICS TIME OFF
+```
+![Create index](/img/3.2_create_index.png)
+![Update with index](/img/3.2_update_with_index_time.png)
+
+### в) используя хранимую функцию подсчета количества однофамильцев
+
+```SQL
+USE my_users
+GO
+
+ALTER TABLE Users_04 ADD namesake_count INT;
+GO
+
+CREATE FUNCTION get_namesake_count(@lastname NVARCHAR(50)) RETURNS INT AS
+    BEGIN
+        DECLARE @result INT;
+        SELECT @result = count(*) from Users_04 WHERE last_name = @lastname;
+        RETURN @result;
+    END;
+
+SET STATISTICS TIME ON
+
+UPDATE Users_04
+SET Users_04.namesake_count = dbo.get_namesake_count(last_name);
+
+SET STATISTICS TIME OFF
+```
+![Update with function](/img/3.3_function_time.png)
