@@ -244,3 +244,27 @@ SET STATISTICS TIME OFF
 |         | Index          | Update  |           |
 |         | 1.364 s        | 4.689 s |           |
 | 5.316 s | 6.053 s        |         | 17.937 s  |
+
+
+<table>
+    <tbody>
+        <tr>
+            <td rowspan="3">Update</td>
+            <td colspan="2">Update with index</td>
+            <td rowspan="3">Function</td>
+        </tr>
+        <tr>
+            <td>Index</td>
+            <td>Update</td>
+        </tr>
+        <tr>
+            <td>1.364 s</td>
+            <td>4.689 s</td>
+        </tr>
+        <tr>
+            <td>5.316 s</td>
+            <td colspan="2">6.053 s</td>
+            <td>17.937 s</td>
+        </tr>
+    </tbody>
+</table>
