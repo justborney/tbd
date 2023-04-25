@@ -239,12 +239,6 @@ SET STATISTICS TIME OFF
 ![Update with function](/img/3.3_function_time.png)
 
 ### Сводные данные
-| Update  | Update (index) |         | Function  |
-|---------|----------------|---------|-----------|
-|         | Index          | Update  |           |
-|         | 1.364 s        | 4.689 s |           |
-| 5.316 s | 6.053 s        |         | 17.937 s  |
-
 
 <table>
     <tbody>
