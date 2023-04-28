@@ -105,6 +105,7 @@ SET Users_02.full_age = DATEDIFF(day, Users_02.birthday, GETDATE() - (DATEDIFF(y
 GO
 ```
 ![Update full age](/img/2.1_update_time.png)
+![Update result](/img/2.1_update_result.png)
 
 ### б) Trigger
 ```SQL
@@ -132,6 +133,7 @@ SET STATISTICS TIME OFF
 GO
 ```
 ![Trigger full age](/img/2.2_trigger_time.png)
+![Trigger result](/img/2.2_trigger_result.png)
 
 ### в) Procedure
 ```SQL
@@ -155,6 +157,7 @@ SET STATISTICS TIME OFF
 GO
 ```
 ![Procedure full age](/img/2.3_procedure_time.png)
+![Procedure result](/img/2.3_procedure_result.png)
 
 ### Сводные данные
 | Update    | Trigger | Procedure |
@@ -191,7 +194,8 @@ WHERE Users_02.last_name = namesake_count_temp.last_name
 
 SET STATISTICS TIME OFF
 ```
-![Update without index](/img/3.1_update_without_index_time.png)
+![Update without index time](/img/3.1_update_without_index_time.png)
+![Update without index result](/img/3.1_result.png)
 
 ### б) через Update с предварительным созданием индекса по полю с фамилией
 
@@ -217,6 +221,7 @@ SET STATISTICS TIME OFF
 ```
 ![Create index](/img/3.2_create_index.png)
 ![Update with index](/img/3.2_update_with_index_time.png)
+![Update with index result](/img/3.2_update_with_index_result.png)
 
 ### в) используя хранимую функцию подсчета количества однофамильцев
 
@@ -242,6 +247,7 @@ SET Users_04.namesake_count = dbo.get_namesake_count(last_name);
 SET STATISTICS TIME OFF
 ```
 ![Update with function](/img/3.3_function_time.png)
+![Update with index result](/img/3.3_function_result.png)
 
 ### Сводные данные
 
